@@ -1,34 +1,17 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 import os
-
-# Set page config must be the first Streamlit command
-st.set_page_config(layout="wide", page_title="Sales Intelligence Dashboard")
 
 @st.cache_data
 def load_data():
-    # Ensure the file is in the same directory as app.py
-    return pd.read_csv("generated_data.csv")
-
-# Load the data
-try:
-    df = load_data()
-except Exception as e:
-    st.error(f"Error loading data: {e}")
-    st.stop()
-
-# --- DASHBOARD UI ---
-st.title("📊 Sales Intelligence Dashboard")
-st.sidebar.header("Hierarchy Drill-Down")
-
-# Filters
-region = st.sidebar.selectbox("Region", df['Region'].unique())
-auh = st.sidebar.selectbox("Area Head", df[df['Region'] == region]['AUH_Name'].unique())
-sm = st.sidebar.selectbox("Senior Manager", df[df['AUH_Name'] == auh]['Senior_Manager_Name'].unique())
-mgr = st.sidebar.selectbox("Sales Manager", df[df['Senior_Manager_Name'] == sm]['Sales_Manager_Name'].unique())
-
-filtered_df = df[df['Sales_Manager_Name'] == mgr]
-
-st.write(f"Displaying data for Sales Manager: {mgr}")
-st.dataframe(filtered_df.head())
+    # Get the directory where app.py is located
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, "sales_performance_data.csv")
+    
+    if not os.path.exists(file_path):
+        # List files in the directory to help you debug
+        files_in_dir = os.listdir(current_dir)
+        st.error(f"File not found: {file_path}. Found these files instead: {files_in_dir}")
+        st.stop()
+        
+    return pd.read_csv(file_path)

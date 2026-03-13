@@ -9,7 +9,7 @@ st.set_page_config(layout="wide", page_title="Sales Intelligence Dashboard")
 @st.cache_data
 def load_data():
     # Ensure the file is in the same directory as app.py
-    return pd.read_csv("sales_performance_data.csv")
+    return pd.read_csv("generated_data.csv")
 
 # Load the data
 try:

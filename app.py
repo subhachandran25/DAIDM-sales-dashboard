@@ -8,9 +8,17 @@ st.set_page_config(layout="wide", page_title="Sales Intelligence Dashboard")
 
 # Load Data
 @st.cache_data
+import streamlit as st
+import pandas as pd
+import os
+
+@st.cache_data
 def load_data():
-    df = pd.read_csv("sales_performance_data.csv")
-    return df
+    file_path = "sales_performance_data.csv"
+    if not os.path.exists(file_path):
+        st.error(f"File not found: {os.path.abspath(file_path)}. Please ensure it is in the root directory.")
+        return pd.DataFrame() # Return empty DF to prevent crash
+    return pd.read_csv(file_path)
 
 df = load_data()
 
